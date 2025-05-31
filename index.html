@@ -1,0 +1,1036 @@
+<!DOCTYPE html><!--  Last Published: Sat May 31 2025 04:50:06 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="67d818e846395f12f269275b" data-wf-site="67d67edc3ed28aa00cd5d1c0">
+<head>
+  <meta charset="utf-8">
+  <title>Hero</title>
+  <meta content="Hero" property="og:title">
+  <meta content="Hero" property="twitter:title">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/webflow.css" rel="stylesheet" type="text/css">
+  <link href="css/the-somnia.webflow.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
+  <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.jpg" rel="apple-touch-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/CustomEase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js" defer=""></script>
+  <style>
+    *,
+    ::after,
+    ::before {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    body {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-overflow-scrolling: touch;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-scroll-chaining: none;
+        overscroll-behavior: none;
+    }
+    @media (min-width: 991px) {
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    }
+    input,
+    textarea {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+    ::-webkit-scrollbar {
+        -ms-overflow-style: none;
+        display: none;
+        overflow: -moz-scrollbars-none;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    .grid {
+        display: none;
+    }
+</style>
+</head>
+<body>
+  <div class="progress-bar_code w-embed w-script">
+    <style>
+  .menu-progress_bar{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background:#9C25FC;
+    transform-origin: left center;
+    transform: scaleX(0);     /* начинаем с 0 % */
+    z-index: -1;
+  }
+</style>
+    <script>
+gsap.registerPlugin(ScrollTrigger),document.addEventListener("DOMContentLoaded",function(){let e=document.querySelector(".menu-progress_bar"),t=document.querySelector(".menu-progress_text");ScrollTrigger.create({trigger:".app",start:"top top",end:"bottom bottom",scrub:!0,onUpdate(r){let o=r.progress;gsap.set(e,{scaleX:o}),t.textContent=Math.round(100*o)+"%"}})});
+</script>
+  </div>
+  <div class="head-scene_code w-embed w-script">
+    <div class="spline-wrapper">
+      <div class="container3d">
+        <canvas id="canvas3d"></canvas>
+        <div class="blur-overlay"></div>
+      </div>
+    </div>
+    <style>
+  .spline-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .container3d {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    position: relative;
+  }
+  #canvas3d {
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+    <!--  Import the necessary Spline runtime  -->
+    <script async="" src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@splinetool/runtime": "https://unpkg.com/@splinetool/runtime@latest/build/runtime.js"
+        }
+      }
+</script>
+    <!--  Custom JavaScript for loading Spline scene and handling interactions  -->
+    <script type="module">
+import{Application as t}from"@splinetool/runtime";let canvas=document.getElementById("canvas3d"),spline=new t(canvas),buttonPreloader=document.getElementById("button_preloader");spline.load("https://prod.spline.design/5d5FvSOJKYDZPl8Y/scene.splinecode").then(()=>{let t=spline.findObjectByName("head_container"),e=spline.findObjectByName("head_left"),o=spline.findObjectByName("head_right");spline.findObjectByName("head_wrapper");let n={maxRotationX:.15,maxRotationY:.22,smoothness:.92,returnDelay:.8,returnDuration:1.2},i={targetRotationX:0,targetRotationY:0,currentRotationX:0,currentRotationY:0,mouseX:window.innerWidth/2,mouseY:window.innerHeight/2,isActive:!1};function a(){i.tickerId&&gsap.ticker.remove(i.tickerId),i.tickerId=gsap.ticker.add(()=>{e&&o&&(i.targetRotationY=(i.mouseX/window.innerWidth-.5)*n.maxRotationY,i.targetRotationX=-((i.mouseY/window.innerHeight-.5)*n.maxRotationX),i.currentRotationX+=(i.targetRotationX-i.currentRotationX)*(1-n.smoothness),i.currentRotationY+=(i.targetRotationY-i.currentRotationY)*(1-n.smoothness),gsap.set(e.rotation,{x:i.currentRotationX,y:i.currentRotationY}),gsap.set(o.rotation,{x:i.currentRotationX,y:i.currentRotationY}))})}a();let r;if(window.addEventListener("mousemove",t=>{i.mouseX=t.clientX,i.mouseY=t.clientY,i.isActive=!0,clearTimeout(r),r=setTimeout(()=>{gsap.to(i,{targetRotationX:0,targetRotationY:0,duration:n.returnDuration,ease:"power2.inOut",onComplete(){i.isActive=!1}})},1e3*n.returnDelay)}),t){t.position.y=-100;let s={y:-100};buttonPreloader.addEventListener("click",()=>{gsap.to(s,{y:-80,duration:2,ease:"power3.out",onUpdate(){t.position.y=s.y}})}),ScrollTrigger.create({trigger:".content-section",start:"top center",end:"bottom center",onEnter(){gsap.to(s,{y:-40,duration:1.2,ease:"power2.out",onUpdate(){t.position.y=s.y}})},onLeaveBack(){gsap.to(s,{y:-80,duration:1.2,ease:"power2.out",onUpdate(){t.position.y=s.y}})}})}if(e&&o&&window.ScrollTrigger){let u=t=>t*(Math.PI/180);ScrollTrigger.create({trigger:".content-section",start:"top center",end:"bottom center",onEnter(){gsap.to(e.position,{x:-.9,duration:1.2,ease:"power2.out"}),gsap.to(o.position,{x:.9,duration:1.2,ease:"power2.out"}),gsap.to(e.rotation,{y:-u(10),duration:1.2,ease:"power2.out"}),gsap.to(o.rotation,{y:u(10),duration:1.2,ease:"power2.out"})},onLeaveBack(){gsap.to(e.position,{x:0,duration:1.2,ease:"power2.out"}),gsap.to(o.position,{x:0,duration:1.2,ease:"power2.out"}),gsap.to(e.rotation,{y:0,duration:1.2,ease:"power2.out"}),gsap.to(o.rotation,{y:0,duration:1.2,ease:"power2.out"})}}),ScrollTrigger.create({trigger:".content_wrap-static",start:"top 100%",onEnter(){gsap.timeline().to(e.position,{x:0,z:0,y:0,duration:1,ease:"expo.inOut"}).to(e.scale,{x:1,y:1,z:1,duration:1,ease:"expo.inOut"},"<").to(e.rotation,{x:0,y:0,z:0,duration:1,ease:"expo.inOut"},"<"),gsap.timeline().to(o.position,{x:0,z:0,y:0,duration:1,ease:"expo.inOut"}).to(o.scale,{x:1,y:1,z:1,duration:1,ease:"expo.inOut"},"<").to(o.rotation,{x:0,y:0,z:0,duration:1,ease:"expo.inOut"},"<")},onLeaveBack(){gsap.timeline().to(e.position,{x:-.9,z:0,y:0,duration:1,ease:"expo.inOut"}).to(e.scale,{x:1,y:1,z:1,duration:1,ease:"expo.inOut"},"<").to(e.rotation,{x:0,y:-u(10),z:0,duration:1,ease:"expo.inOut"},"<"),gsap.timeline().to(o.position,{x:.9,z:0,y:0,duration:1,ease:"expo.inOut"}).to(o.scale,{x:1,y:1,z:1,duration:1,ease:"expo.inOut"},"<").to(o.rotation,{x:0,y:u(10),z:0,duration:1,ease:"expo.inOut"},"<")}}),ScrollTrigger.create({trigger:".portal-track",start:"top center",end:"bottom center",onEnter(){gsap.timeline({delay:.1}).to(e.position,{x:-1,z:.3,y:-.5,duration:1.2,ease:"power2.out"}).to(e.scale,{x:1.5,y:1.5,z:1.5,duration:1.2,ease:"power2.out"},"<").to(e.rotation,{x:u(-5),y:u(10),z:u(20),duration:1.2,ease:"power2.out"},"<"),gsap.timeline({delay:.1}).to(o.position,{x:1,z:.3,y:-.5,duration:1.2,ease:"power2.out"}).to(o.scale,{x:1.5,y:1.5,z:1.5,duration:1.2,ease:"power2.out"},"<").to(o.rotation,{x:u(-5),y:u(-10),z:u(-20),duration:1.2,ease:"power2.out"},"<")},onLeaveBack(){gsap.timeline().to(e.position,{x:-.7,z:0,y:0,duration:1.2,ease:"power2.out"}).to(e.scale,{x:1,y:1,z:1,duration:1.2,ease:"power2.out"},"<").to(e.rotation,{x:0,y:u(-10),z:0,duration:1.2,ease:"power2.out"},"<"),gsap.timeline().to(o.position,{x:.7,z:0,y:0,duration:1.2,ease:"power2.out"}).to(o.scale,{x:1,y:1,z:1,duration:1.2,ease:"power2.out"},"<").to(o.rotation,{x:0,y:u(10),z:0,duration:1.2,ease:"power2.out"},"<")}});let $=document.querySelector(".look-button");if($&&e&&o){let p=e.position.x,_=o.position.x,d=gsap.timeline({paused:!0,defaults:{duration:2,ease:"expo.inOut"}}).to(e.position,{x:p-20},0).to(o.position,{x:_+20},0),c=!1;$.addEventListener("click",()=>{c?d.reverse():d.play(),c=!c})}}else console.warn("⚠️ head_left или head_right не найдены, либо ScrollTrigger не подключён")});
+</script>
+  </div>
+  <div class="bg-sound w-embed w-script">
+    <script>
+document.addEventListener("DOMContentLoaded",()=>{let e=new Howl({src:["https://cdn.jsdelivr.net/gh/chipas111/the-somnia@dfaa7fc/bg-sound.mp3"],loop:!0,volume:.2,html5:!0}),t=!1,d=document.querySelector(".button_preloader"),n=document.querySelector(".menu_sound-wrap");d&&d.addEventListener("click",()=>{t||(e.play(),t=!0)},{once:!0}),n&&n.addEventListener("click",()=>{t?(e.pause(),t=!1,n.classList.add("muted")):(e.play(),t=!0,n.classList.remove("muted"))})});
+</script>
+  </div>
+  <div class="pre-loader_animation w-embed w-script">
+    <style>
+  .glow{
+    border-radius:50%;
+    filter:blur(40px);
+    /* Safari-fix: включаем аппаратный слой */
+    transform: translateZ(0);
+    /* или will-change */
+    will-change: filter;
+  }
+</style>
+    <script>
+document.addEventListener("DOMContentLoaded",function(){let e={value:0},t="cubic-bezier(0.77, 0, 0.175, 1)",n=document.querySelector(".loader_number"),o=document.querySelector(".button_preloader"),r="Enter",$=!1;function l(e,t,n=1e3,o){let r="!@#$%^&*()_+-=[]{}<>?~",$=0,l=Math.round(n/50);e.style.color="#141414";let a=setInterval(()=>{let n="";for(let d=0;d<t.length;d++)n+=.5>Math.random()?r[Math.floor(Math.random()*r.length)]:t[d];e.textContent=n,++$>=l&&(clearInterval(a),e.textContent=t,o&&o())},50)}let a=gsap.timeline();a.to(e,{value:100,duration:3,ease:t,onUpdate:function t(){if(!n)return;let o=Math.round(e.value);o>=100&&!$?($=!0,l(n,r,600)):$||(n.textContent=o)}}),a.to(".button_preloader-progress",{width:"100%",duration:3,ease:t},0),a.to(".button_preloader-finished",{width:"100%",duration:1,ease:t}),a.call(()=>{o.style.pointerEvents="auto"}),o.addEventListener("mouseenter",()=>{$&&l(n,r,300)})});
+</script>
+  </div>
+  <div class="stars-embed w-embed w-script">
+    <style>
+  .container {
+    display: block;
+    position: fixed;
+    z-index: -2;
+    width: 100%;
+    height: 100vh;
+    background: black;
+  }
+  .container .text {
+    color: #FFF;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    margin: -10px -75px 0 0;
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+  .stars {
+    z-index: 10;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 718px 1689px #FFF , 1405px 2127px #FFF , 1270px 1148px #FFF , 620px 641px #FFF , 1538px 708px #FFF , 2169px 1632px #FFF , 523px 1494px #FFF , 1081px 2018px #FFF , 1372px 585px #FFF , 974px 576px #FFF , 448px 1231px #FFF , 78px 2055px #FFF , 1180px 1274px #FFF , 1752px 2099px #FFF , 1392px 488px #FFF , 1836px 2303px #FFF , 1309px 816px #FFF , 922px 962px #FFF , 1165px 2485px #FFF , 2054px 176px #FFF , 1425px 747px #FFF , 2253px 2056px #FFF , 1602px 114px #FFF , 433px 1332px #FFF , 65px 1726px #FFF , 257px 334px #FFF , 1512px 1855px #FFF , 775px 2422px #FFF , 2512px 2123px #FFF , 76px 2235px #FFF , 1979px 501px #FFF , 352px 1222px #FFF , 554px 1215px #FFF , 1200px 2163px #FFF , 2078px 1983px #FFF , 2461px 557px #FFF , 1960px 2055px #FFF , 1966px 316px #FFF , 1123px 1402px #FFF , 1461px 2288px #FFF , 1625px 2076px #FFF , 822px 609px #FFF , 531px 1358px #FFF , 900px 1938px #FFF , 1867px 1362px #FFF , 1049px 372px #FFF , 319px 980px #FFF , 2321px 2421px #FFF , 1701px 1425px #FFF , 1827px 1324px #FFF , 126px 1121px #FFF , 527px 1735px #FFF;
+    animation: animStar 100s linear infinite;
+  }
+  .stars:after {
+    content: " ";
+    top: -600px;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    position: absolute;
+    background: transparent;
+    box-shadow: 1229px 1419px #FFF , 672px 2257px #FFF , 821px 854px #FFF , 731px 1239px #FFF , 1244px 58px #FFF , 687px 2428px #FFF , 173px 1549px #FFF , 1973px 940px #FFF , 2334px 1057px #FFF , 792px 882px #FFF , 1499px 1912px #FFF , 1892px 9px #FFF , 172px 1753px #FFF , 22px 1577px #FFF , 934px 2059px #FFF , 1398px 2309px #FFF , 100px 77px #FFF , 1545px 22px #FFF , 595px 1917px #FFF , 941px 1452px #FFF , 1226px 1022px #FFF , 1254px 990px #FFF , 2507px 352px #FFF , 111px 887px #FFF , 1666px 168px #FFF , 966px 986px #FFF , 121px 2559px #FFF , 1424px 792px #FFF , 1973px 2544px #FFF , 577px 503px #FFF , 1167px 1107px #FFF , 2397px 1653px #FFF , 1054px 810px #FFF , 663px 805px #FFF , 1084px 317px #FFF , 2214px 759px #FFF , 190px 975px #FFF , 2218px 2104px #FFF , 2013px 1227px #FFF , 383px 1778px #FFF , 1287px 1660px #FFF , 2131px 994px #FFF , 1073px 748px #FFF , 1745px 2372px #FFF , 1424px 252px #FFF , 1274px 2457px #FFF , 1976px 2422px #FFF , 1644px 1665px #FFF , 2372px 1772px #FFF , 1593px 580px #FFF , 894px 2361px #FFF , 31px 1802px #FFF , 1552px 1134px #FFF , 1477px 1847px #FFF , 1647px 2464px #FFF , 599px 510px #FFF , 2016px 226px #FFF , 1402px 243px #FFF , 748px 953px #FFF , 387px 1212px #FFF , 453px 1525px #FFF , 1032px 93px #FFF , 1420px 1399px #FFF , 146px 948px #FFF , 2256px 1631px #FFF , 1405px 394px #FFF , 201px 2149px #FFF , 1077px 1765px #FFF , 34px 2213px #FFF , 2388px 246px #FFF , 392px 667px #FFF , 1595px 181px #FFF , 323px 426px #FFF , 2405px 2410px #FFF , 2484px 280px #FFF;
+  }
+  .stars1 {
+    z-index: 10;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 452px 2369px #FFF , 2030px 2013px #FFF , 113px 1775px #FFF , 426px 2228px #FFF , 735px 2395px #FFF , 483px 147px #FFF , 1123px 1666px #FFF , 1944px 113px #FFF , 1096px 372px #FFF , 2005px 118px #FFF , 1948px 2320px #FFF , 2095px 823px #FFF , 742px 1559px #FFF , 1637px 383px #FFF , 877px 992px #FFF , 141px 1522px #FFF , 483px 941px #FFF , 2028px 761px #FFF , 1164px 2482px #FFF , 692px 1202px #FFF , 1008px 62px #FFF , 1820px 2535px #FFF , 1459px 2067px #FFF , 519px 1297px #FFF , 1620px 252px #FFF , 1014px 1855px #FFF , 679px 135px #FFF , 1927px 2544px #FFF , 836px 1433px #FFF , 286px 21px #FFF , 1131px 769px #FFF , 1717px 1031px #FFF , 2121px 517px #FFF , 1865px 1257px #FFF , 1640px 1712px #FFF , 158px 162px #FFF , 2491px 1514px #FFF , 784px 1446px #FFF , 1547px 968px #FFF , 1966px 1461px #FFF , 923px 1883px #FFF , 601px 81px #FFF , 1486px 598px #FFF , 1947px 1462px #FFF , 2161px 1181px #FFF , 773px 675px #FFF , 2023px 455px #FFF , 1199px 1199px #FFF , 94px 1814px #FFF , 1055px 852px #FFF , 583px 631px #FFF , 150px 1931px #FFF , 1472px 597px #FFF , 611px 1338px #FFF , 54px 859px #FFF , 1266px 1019px #FFF , 1028px 256px #FFF , 1442px 964px #FFF , 436px 1325px #FFF , 2446px 1141px #FFF , 723px 70px #FFF , 825px 964px #FFF , 63px 271px #FFF , 647px 849px #FFF , 309px 673px #FFF , 1965px 2090px #FFF , 1672px 9px #FFF , 450px 2504px #FFF , 1675px 2135px #FFF , 2075px 921px #FFF , 1607px 2348px #FFF , 2243px 1494px #FFF;
+    animation: animStar 125s linear infinite;
+  }
+  .stars1:after {
+    content: " ";
+    top: -600px;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    position: absolute;
+    background: transparent;
+    box-shadow: 435px 1410px #FFF , 1717px 2554px #FFF , 885px 1458px #FFF , 1614px 909px #FFF , 26px 2169px #FFF , 1627px 1343px #FFF , 511px 518px #FFF , 1388px 722px #FFF , 748px 1982px #FFF , 837px 2188px #FFF , 891px 1897px #FFF , 917px 2547px #FFF , 866px 2021px #FFF , 1748px 2464px #FFF , 409px 2476px #FFF , 1321px 1824px #FFF , 1946px 1620px #FFF , 84px 1996px #FFF , 773px 475px #FFF , 2327px 1356px #FFF , 181px 38px #FFF , 2122px 1291px #FFF , 2254px 375px #FFF , 654px 432px #FFF , 2022px 710px #FFF , 866px 1651px #FFF , 948px 2128px #FFF , 1107px 1282px #FFF , 1605px 1555px #FFF , 847px 2056px #FFF , 1678px 385px #FFF , 1723px 2282px #FFF , 516px 166px #FFF , 1764px 93px #FFF , 1947px 2302px #FFF , 1357px 1486px #FFF , 1237px 2532px #FFF , 2338px 2002px #FFF , 251px 1525px #FFF , 876px 1121px #FFF , 189px 759px #FFF , 1936px 1574px #FFF , 2510px 1440px #FFF , 204px 836px #FFF , 2044px 437px #FFF , 471px 45px #FFF , 394px 548px #FFF , 1730px 641px #FFF , 1526px 1701px #FFF , 1559px 1106px #FFF , 1396px 1826px #FFF , 1106px 644px #FFF , 160px 2149px #FFF , 1261px 1804px #FFF , 363px 714px #FFF , 2002px 2277px #FFF , 696px 1741px #FFF , 2291px 499px #FFF , 2089px 2229px #FFF;
+  }
+  .stars2 {
+    z-index: 10;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 380px 1043px #FFF , 10px 1086px #FFF , 660px 1062px #FFF , 1371px 842px #FFF , 1290px 2153px #FFF , 2258px 231px #FFF , 2130px 2217px #FFF , 1084px 758px #FFF , 1464px 1903px #FFF , 621px 2482px #FFF , 2470px 754px #FFF , 1282px 1797px #FFF , 510px 1678px #FFF , 836px 799px #FFF , 2001px 134px #FFF , 2314px 1869px #FFF , 1031px 643px #FFF , 949px 292px #FFF , 16px 2265px #FFF , 465px 1239px #FFF , 2117px 1952px #FFF , 1683px 605px #FFF , 1818px 1945px #FFF , 890px 1749px #FFF , 324px 110px #FFF , 1048px 1442px #FFF , 2399px 1553px #FFF , 157px 551px #FFF , 666px 314px #FFF , 897px 933px #FFF , 2397px 438px #FFF , 1280px 988px #FFF , 1510px 2373px #FFF , 2453px 1645px #FFF , 831px 994px #FFF , 2125px 338px #FFF , 1571px 2128px #FFF , 1792px 53px #FFF , 820px 2480px #FFF , 529px 1544px #FFF , 1941px 928px #FFF , 1632px 795px #FFF , 152px 993px #FFF , 1040px 260px #FFF , 1131px 589px #FFF , 2395px 1336px #FFF , 1537px 1906px #FFF , 1989px 1910px #FFF , 1489px 1098px #FFF , 996px 1585px #FFF , 476px 69px #FFF , 123px 466px #FFF , 374px 414px #FFF , 741px 1097px #FFF , 1415px 1296px #FFF , 945px 1132px #FFF , 909px 2080px #FFF , 2219px 8px #FFF , 2198px 1039px #FFF , 1794px 1513px #FFF , 1484px 1972px #FFF , 1557px 2099px #FFF , 1385px 912px #FFF , 1612px 1474px #FFF , 169px 1963px #FFF;
+    animation: animStar 175s linear infinite;
+  }
+  .stars2:after {
+    content: " ";
+    top: -600px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    position: absolute;
+    background: transparent;
+    box-shadow: 148px 2112px #FFF , 2328px 2246px #FFF , 793px 1150px #FFF , 2476px 867px #FFF , 195px 2295px #FFF , 721px 1158px #FFF , 344px 1096px #FFF , 1434px 1247px #FFF , 2251px 1334px #FFF , 1696px 1404px #FFF , 1928px 1929px #FFF , 473px 1718px #FFF , 1176px 1364px #FFF , 133px 1990px #FFF , 1396px 1179px #FFF , 1355px 1046px #FFF , 676px 869px #FFF , 2255px 1676px #FFF , 2393px 2105px #FFF , 1032px 1390px #FFF , 773px 2159px #FFF , 1235px 945px #FFF , 1161px 209px #FFF , 1878px 175px #FFF , 287px 1787px #FFF , 509px 935px #FFF , 473px 442px #FFF , 1864px 177px #FFF , 768px 2004px #FFF , 513px 744px #FFF , 2060px 2271px #FFF , 2187px 2135px #FFF , 1818px 505px #FFF , 809px 1998px #FFF , 323px 2553px #FFF , 1420px 167px #FFF , 2418px 2233px #FFF , 1955px 2053px #FFF , 1822px 145px #FFF , 931px 629px #FFF , 94px 2440px #FFF , 1816px 718px #FFF , 386px 668px #FFF , 2040px 397px #FFF , 40px 866px #FFF , 1397px 2398px #FFF , 2399px 297px #FFF , 1611px 259px #FFF , 1393px 1139px #FFF;
+  }
+  .shooting-stars {
+    z-index: 10;
+    width: 5px;
+    height: 85px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0), white);
+    animation: animShootingStar 10s linear infinite;
+  }
+  @keyframes animStar {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-2560px) translateX(-2560px);
+    }
+  }
+  @keyframes animShootingStar {
+    from {
+      transform: translateY(0px) translateX(0px) rotate(-45deg);
+      opacity: 1;
+      height: 5px;
+    }
+    to {
+      transform: translateY(-2560px) translateX(-2560px) rotate(-45deg);
+      opacity: 1;
+      height: 800px;
+    }
+  }
+  .sky {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+	}
+</style>
+    <body>
+      <div class="container">
+        <div class="sky">
+          <div class="stars"></div>
+          <div class="stars1"></div>
+          <div class="stars2"></div>
+          <div class="shooting-stars"></div>
+        </div>
+      </div>
+    </body>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+	  const sky = document.querySelector('.sky');
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 40;
+    const y = (e.clientY / window.innerHeight - 0.5) * 40;
+    sky.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+</script>
+  </div>
+  <div class="grid_wrap">
+    <div class="grid_col"></div>
+    <div class="grid_col"></div>
+    <div class="grid_col"></div>
+    <div class="grid_col"></div>
+    <div class="grid_col"></div>
+    <div class="code-embed w-embed">
+      <style>
+	.grid_wrap {
+  	pointer-events: none;
+  }
+</style>
+    </div>
+  </div>
+  <div data-w-id="74030356-d128-3a2b-b29f-bfc78356958f" style="opacity:0;-webkit-transform:translate3d(0, 0, 0) scale3d(0, 0, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0, 0, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0, 0, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0, 0, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="cursor-wrapper">
+    <div style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="cursor">
+      <div class="cursor-mask">
+        <p style="-webkit-transform:translate3d(0, 0rem, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0rem, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0rem, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0rem, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="cursor-text">scroll</p>
+      </div>
+    </div>
+  </div>
+  <div data-scroll-lock="true" data-w-id="4a7cbb60-0095-8cee-e55d-feb6b9a50bb9" style="opacity:1;display:block" class="pre_loader-wrap">
+    <div class="pre_loader-inner">
+      <div data-preserve-aspect-ratio="xMidYMid slice" data-w-id="b550c1c3-0be1-d667-3c76-00cebf09f9b8" data-is-ix2-target="1" class="preloader_lottie" data-animation-type="lottie" data-src="documents/preloader.json" data-loop="0" data-direction="1" data-autoplay="0" data-renderer="svg" data-default-duration="0" data-duration="8.008007681835174" data-ix2-initial-state="0"></div>
+      <div class="glow-container">
+        <div data-w-id="19a52509-a51f-7e8b-2440-620900b700a1" style="background-color:rgba(51,51,51,0.4)" class="glow"></div>
+      </div>
+      <div id="button_preloader" button_preloader="" data-w-id="3ae248a6-024b-6fba-565c-e7ee534bf714" class="button_preloader">
+        <div class="button_preloader-progress"></div>
+        <div class="button_preloader-finished"></div>
+        <div class="loader_number"> </div>
+        <div data-w-id="be86159e-c096-5b70-6694-2868af113d8a" style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="button_corner-wrap">
+          <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"><img src="images/media-7.webp" loading="lazy" alt="" class="corner-img is-blur"></div>
+          <div class="menu_crn-wrap is-top-r"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"></div>
+          <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"></div>
+          <div class="menu_crn-wrap is-btm-r"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"><img src="images/corner.svg" loading="lazy" alt="" class="corner-img is-blur"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section data-scroll-lock="true" class="contact-wrapper menu-face">
+    <div class="close-container"><img src="images/close.svg" loading="lazy" alt="close icon" class="close-img"></div>
+    <div class="w-embed w-script">
+      <section class="mwg_effect000">
+        <div class="medias">
+          <div class="media"><img src="images/media-1.webp" alt=""></div>
+          <div class="media"><img src="images/media-2.webp" alt=""></div>
+          <div class="media"><img src="images/media-3.webp" alt=""></div>
+          <div class="media"><img src="images/media-4.webp" alt=""></div>
+          <div class="media"><img src="images/media-5.webp" alt=""></div>
+          <div class="media"><img src="images/media-6.webp" alt=""></div>
+          <div class="media"><img src="images/media-7.webp" alt=""></div>
+          <div class="media"><img src="images/media-8.webp" alt=""></div>
+          <div class="contact">
+            <a href="mailto:dgolub2020@gmail.com">dgolub2020@gmail.com</a>
+          </div>
+        </div>
+      </section>
+      <style>
+	.contact{
+    grid-column:1 / -1;          /* ► тянется на всю ширину 4-х колонок */
+    display:flex;                /* выравнивание текста */
+    justify-content:center;      /* по центру, можно flex-start / end */
+    align-items:center;          /* по вертикали */
+    padding:2vw 0;               /* отступы сверху/снизу */
+  }
+  .contact a{
+    text-decoration: underline;
+    letter-spacing: -.04em;
+    font-family: "Neue Haas Grotesk (light)", Georgia, sans-serif;
+    font-weight: 700;
+    font-size:clamp(20px, 6vw, 120px);
+    line-height: 1.2;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    height: 1.2em;
+    white-space:nowrap;  
+    color: transparent; 
+  }
+  .contact a::before,
+  .contact a::after {
+    content: "dgolub2020@gmail.com";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-decoration: underline;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    font-family: "Neue Haas Grotesk (light)", Georgia, sans-serif;
+    white-space: nowrap;
+    color: var(--light-grey);
+    transition: transform 0.4s ease;
+    line-height: 1.2;
+  }
+  .contact a::before {
+    transform: translateY(0%);
+  }
+  .contact a::after {
+    transform: translateY(100%);
+  }
+  .contact a:hover::before {
+    transform: translateY(-100%);
+  }
+  .contact a:hover::after {
+    transform: translateY(0%);
+  }
+  .mwg_effect000 {
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+  }
+  .mwg_effect000 .medias {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1vw;
+  }
+  .mwg_effect000 .medias img {
+      width: 11vw;
+      height: 11vw;
+      object-fit: contain;
+      border-radius: 4%;
+      display: block;
+      pointer-events: none;
+      will-change: transform;
+  }
+  .close-container {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+	}
+	.close-container:hover {
+    transform: scale(1.15);
+	}
+</style>
+      <script>
+  window.addEventListener("DOMContentLoaded", () => {
+      gsap.registerPlugin(InertiaPlugin)
+      let oldX = 0, 
+          oldY = 0, 
+          deltaX = 0,
+          deltaY = 0
+      const root = document.querySelector('.mwg_effect000')
+      root.addEventListener("mousemove", (e) => {
+          // Calculate horizontal movement since the last mouse position
+          deltaX = e.clientX - oldX;
+          // Calculate vertical movement since the last mouse position
+          deltaY = e.clientY - oldY;
+          // Update old coordinates with the current mouse position
+          oldX = e.clientX;
+          oldY = e.clientY;
+      })
+      root.querySelectorAll('.media').forEach(el => {
+          // Add an event listener for when the mouse enters each media
+          el.addEventListener('mouseenter', () => {
+              const tl = gsap.timeline({ 
+                  onComplete: () => {
+                      tl.kill()
+                  }
+              })
+              tl.timeScale(1.2) // Animation will play 20% faster than normal
+              const image = el.querySelector('img')
+              tl.to(image, {
+                 inertia: {
+                      x: {
+                          velocity: deltaX * 30, // Higher number = movement amplified
+                          end: 0 // Go back to the initial position
+                      },
+                      y: {
+                          velocity: deltaY * 30, // Higher number = movement amplified
+                          end: 0 // Go back to the initial position
+                      },
+                  },
+              })
+              tl.fromTo(image, {
+                  rotate: 0
+              }, {
+                  duration: 0.4,
+                  rotate:(Math.random() - 0.5) * 30, // Returns a value between -15 & 15
+                  yoyo: true, 
+                  repeat: 1,
+                  ease: 'power1.inOut' // Will slow at the begin and the end
+              }, '<') // The animation starts at the same time as the previous tween
+          })
+      })
+      //Меню
+        // Кнопка открытия
+        const openBtn = document.querySelector('.menu_dots-wrapper');
+        // Меню
+        const menuWrap = document.querySelector('.contact-wrapper');
+        // Кнопка закрытия
+        const closeBtn = document.querySelector('.close-container');
+        // Кастомный курсор
+        const cursor = document.querySelector('.cursor-wrapper');
+        // Открытие меню
+        openBtn.addEventListener('click', () => {
+          menuWrap.style.display = 'block';
+          document.body.classList.add('menu--open');
+          if (cursor) cursor.style.display = 'none';
+        });
+        // Закрытие меню
+        closeBtn.addEventListener('click', () => {
+          menuWrap.style.display = 'none';
+          document.body.classList.remove('menu--open');
+          if (cursor) cursor.style.display = 'flex';
+        });
+  });
+</script>
+    </div>
+  </section>
+  <div class="background">
+    <div class="bg_glow-container">
+      <div class="bg_glow-wrap is-left"><img src="images/glow-left.svg" loading="lazy" alt="" class="img"></div>
+      <div class="bg_glow-wrap is-right"><img src="images/glow-right.svg" loading="lazy" alt="" class="img"></div>
+    </div>
+  </div>
+  <div class="ui_frame-wrap">
+    <div class="disclaimer-box">
+      <div class="disclaimer-box_top">
+        <div data-typing="fast" class="paragraph is-disclaimer">visual<br>data</div>
+        <div data-typing="fast" class="paragraph is-disclaimer">session7Dev</div>
+        <div data-typing="fast" class="paragraph is-disclaimer">Active<br>reality</div>
+      </div>
+      <div class="disclaimer-box_middle">
+        <div data-typing="fast" class="paragraph is-disclaimer is-spacing">https://www.thesomnia.com/chapter-I</div>
+      </div>
+      <div class="disclaimer-box_bottom">
+        <div data-typing="fast" class="paragraph is-disclaimer">A dream is your mind’s response to a prompt you never wrote. Prompt your subconscious, Shape your dream</div>
+      </div>
+    </div>
+    <div class="ui_frame"></div>
+  </div>
+  <main class="app">
+    <nav class="ui">
+      <div class="menu-container">
+        <div class="menu_wrap">
+          <div class="menu_bg">
+            <div class="w-embed">
+              <style>
+	.menu_bg {
+		backdrop-filter: blur(8px);
+  	-webkit-backdrop-filter: blur(20px);
+   }
+ </style>
+            </div>
+          </div>
+          <div class="menu-progress_wrapper">
+            <div class="menu-progress_text">0%</div>
+            <div class="menu-progress_bar"></div>
+            <div class="menu_crn-container">
+              <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            </div>
+          </div>
+          <div data-w-id="4dbfcac2-f5c6-4e3d-56a3-50eeef466829" class="menu_dots-wrapper">
+            <div class="menu_icon-wrap"><img src="images/menu-icon.svg" loading="lazy" alt="menu icon" class="menu-icon"></div>
+            <div style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="menu_crn-container">
+              <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-btm-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-top-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            </div>
+          </div>
+        </div>
+        <div data-w-id="fc30f249-dbb6-7edc-eb49-37a21b7be029" class="menu_sound-wrap">
+          <div class="text-block">Sound </div>
+          <div style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="menu_crn-container">
+            <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            <div class="menu_crn-wrap is-btm-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            <div class="menu_crn-wrap is-top-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+          </div>
+          <div class="menu_icon-wrap">
+            <div style="height:0.3125rem" class="sound--rect is-1"></div>
+            <div style="height:1.1875rem" class="sound--rect is-2"></div>
+            <div style="height:1.1875rem" class="sound--rect is-2"></div>
+            <div style="height:0.4375rem" class="sound--rect is-3"></div>
+            <div style="height:0.9375rem" class="sound--rect is-4"></div>
+          </div>
+          <div class="menu_bg">
+            <div class="w-embed">
+              <style>
+	.menu_bg {
+		backdrop-filter: blur(8px);
+  	-webkit-backdrop-filter: blur(8px);
+   }
+ </style>
+            </div>
+          </div>
+        </div>
+        <a href="index.html" aria-current="page" class="w-inline-block w--current">
+          <div class="menu_logo-wrap">
+            <div class="logo-container"><img src="images/The-Somnia.svg" loading="lazy" alt="the somnia logo"></div>
+            <div class="menu_bg"></div>
+            <div data-w-id="42c937ab-5742-eda0-b681-8adc3180cfa2" style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="menu_crn-container">
+              <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-top-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              <div class="menu_crn-wrap is-btm-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+            </div>
+          </div>
+        </a>
+        <link rel="prefetch" href="/">
+      </div>
+    </nav>
+    <div class="content">
+      <header class="section">
+        <div class="section_hero">
+          <div class="hero_head-wrap">
+            <h1 class="h-h1">The Somnia</h1>
+            <div class="hero_text-content">
+              <h2 class="h-h3">Every night, your mind generates worlds you never asked for. Scroll down to learn how to take control over it.</h2>
+            </div>
+          </div>
+        </div>
+      </header>
+      <section class="content-section">
+        <div data-title="1" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Introduction</div>
+            <h2 class="h-h2">What is a dream?</h2>
+            <p class="paragraph">Your subconscious renders realities, blending memories, symbols, and desires into something new—much like AI generates images from a prompt. Most of the time, you aren’t the one prompting. Your mind pulls whatever data floats to the surface, creating a world that feels real but lacks direction.</p>
+          </div>
+        </div>
+        <div data-title="2" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Introduction</div>
+            <h2 class="h-h2">Taking the first step into lucidity</h2>
+            <p class="paragraph">Lucid dreaming turns sleep into conscious exploration. With the right approach, anyone can move beyond passive dreaming and learn to navigate the vast landscapes of the subconscious mind. It all starts with choosing the gateway that fits your nature best.</p>
+          </div>
+        </div>
+        <div data-title="3" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Shift</div>
+            <h2 class="h-h2">Three pathways into lucid dreaming</h2>
+            <p class="paragraph">Gaining lucidity is not a matter of luck—it’s a skill that can be trained. There are three primary methods recognized by leading researchers and practitioners that reliably open the gates to conscious dreaming. Each path activates different mechanics of the mind, allowing you to step beyond passive sleep and into deliberate exploration.</p>
+          </div>
+        </div>
+        <div data-title="4" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Method I</div>
+            <h2 class="h-h2">Reality Testing</h2>
+            <p class="paragraph">By training your mind to question reality during the day—through techniques like double-checking text or observing anomalies—you build the habit of recognizing dreams while inside them. This method, introduced by Dr. Stephen LaBerge, develops critical awareness that eventually triggers lucidity during sleep.</p>
+          </div>
+        </div>
+        <div data-title="5" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Method II</div>
+            <h2 class="h-h2">Phase Entrance After Awakening</h2>
+            <p class="paragraph">Described by Michael Raduga, this method leverages the moments of natural awakening. By setting alarms and performing targeted techniques during brief returns to wakefulness, you can transition directly into lucid dreams without losing consciousness.</p>
+          </div>
+        </div>
+        <div data-title="6" class="content_wrap">
+          <div class="content_width">
+            <div class="paragraph is-eyebrow">Method III</div>
+            <h2 class="h-h2">Wake-Initiated Lucid Dreaming (WILD)</h2>
+            <p class="paragraph">This advanced method involves maintaining awareness as your body falls asleep. By riding the thin line between wakefulness and sleep, you can consciously slip into a dreamscape without ever losing your grip on consciousness.</p>
+          </div>
+        </div>
+      </section>
+      <section class="section dive">
+        <div class="dive_container">
+          <div class="content_wrap-static">
+            <h2 class="dive_text">Dive into the portals and discover the methods inside</h2>
+            <p class="paragraph-2">Keep scrolling</p>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="portal-track">
+          <div class="portal-section">
+            <div data-w-id="32e3ff3f-626a-79a9-6fde-1d974df06e1b" class="look-button">
+              <div class="menu_nav-text">Check the method</div>
+              <div style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="menu_crn-container">
+                <div class="menu_crn-wrap is-btm-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+                <div class="menu_crn-wrap is-btm-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+                <div class="menu_crn-wrap is-top-r"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+                <div class="menu_crn-wrap is-top-l"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img"><img src="images/corner.svg" loading="lazy" width="Auto" height="Auto" alt="" class="corner-img is-blur"></div>
+              </div>
+              <div class="menu_bg"></div>
+            </div>
+            <div class="portal-overlay"></div>
+            <div class="portal-bg"></div>
+            <div class="portal-code w-embed w-script">
+              <style>
+    .portal-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0) 85%);
+      mask-repeat: no-repeat;
+      mask-size: 20vw 20vw;
+      mask-position: center;
+      transition: mask-size 1s ease;
+      z-index: 2;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 1s ease-out, transform 1s ease-out, mask-size 1s ease;
+      pointer-events: none;
+    }
+    .portal-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.1) 65%, rgba(0, 0, 0, 0) 85%);
+      mask-repeat: no-repeat;
+      mask-size: 25vw 25vw;
+      mask-position: center;
+      transition: mask-size 1s cubic-bezier(0.77, 0, 0.175, 1);
+      z-index: 1;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 1s ease-out, transform 1s ease-out, mask-size 1s cubic-bezier(0.77, 0, 0.175, 1);
+      pointer-events: none;
+    }
+    .portal-overlay.expand {
+      mask-size: 70vw 70vw;
+      pointer-events: none;
+    }
+    .portal-bg.expand {
+      mask-size: 95vw 95vw;
+      pointer-events: none;
+    }
+    .portal-overlay.revealed,
+    .portal-bg.revealed {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: none;
+    }
+    .scene-content {
+      opacity: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      color: white;
+      text-align: center;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    .scene-content.visible {
+      opacity: 1;
+      pointer-events: auto;
+      pointer-events: none;
+    }
+    /* Fade transitions for scene changes */
+    .fade-transition {
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+  </style>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+              <script>
+document.addEventListener("DOMContentLoaded",function(){let e=1,t=!1,o=[{id:1,title:"REALITY TESTING",overlayImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67d6b2313ed28aa00cf64ab0_e712bc7ccf26dffa4f073752859f69ae_Red%20River.webp",bgImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd22d5c713e16e54c2c42_the-island-bg.webp",content:`
+                  <style>
+                    .portal-content p {
+                      font-size: 20px;
+                      line-height: 1.5;
+                      color: #fff;
+                      margin-top: 24px;
+                    }
+                    .portal-content {
+                      text-align: left;
+                     position: relative;
+                      left: 5%;
+                      bottom: 10vh;
+                      max-width: 350px;
+                    }
+                    .bg-circle {
+                      filter: blur(40px);
+                      position: absolute;
+                      top: 0%;
+                      left: 0%;
+                      bottom: 0%;
+                      right: 0%;
+                      width: 130%;
+                      height: 130%;
+                      background-color: rgba(0,0,0,0.45);
+                      border-radius: 50%;
+                      z-index: -1;
+                    }
+                  </style>
+                  <div class="portal-content">
+                    <h2 class="h-h2">Reality Check</h2>
+                    <p>
+                      Build the habit of questioning your reality throughout the day. 
+                      Every few hours, stop and ask yourself, - Am I dreaming? To verify, 
+                      try reading any text twice—if it changes or blurs, you’re dreaming. 
+                      The key is repetition: the more you do it when awake, the more likely 
+                      your subconscious will trigger this habit during sleep.
+                      It’s a simple but powerful path to spontaneous lucid dreams.
+                    </p>
+                    <div class="bg-circle"></div>
+                  </div>
+                `},{id:2,title:"PHASE ENTRANCE",overlayImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd22d8546d7fdf9609282_9910c098afd117adae1627a9995e0dee_the-island-overlay.webp",bgImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd22d5c713e16e54c2c42_the-island-bg.webp",content:`
+                  <style>
+                    .portal-content p {
+                      font-size: 20px;
+                      line-height: 1.5;
+                      color: #fff;
+                      margin-top: 24px;
+                    }
+                    .portal-content {
+                      text-align: left;
+                     position: relative;
+                      left: 5%;
+                      bottom: 10vh;
+                      max-width: 350px;
+                    }
+                    .bg-circle {
+                      filter: blur(40px);
+                      position: absolute;
+                      top: 0%;
+                      left: 0%;
+                      bottom: 0%;
+                      right: 0%;
+                      width: 130%;
+                      height: 130%;
+                      background-color: rgba(0,0,0,0.45);
+                      border-radius: 50%;
+                      z-index: -1;
+                    }
+                  </style>
+                  <div class="portal-content">
+                    <h2 class="h-h2">Reality Check</h2>
+                    <p>
+                        Set an alarm 2–3 hours before your usual wake time. Wake up briefly—stay awake for 5–10 minutes—then fall asleep again.
+                        As you drift back into sleep, gently perform techniques like imagining yourself moving, spinning, or reaching out with your hands.
+                        These actions "catch" the moment when a dream begins, allowing you to enter it consciously.
+                        With a few mornings of practice, lucid dreams can become your second nature.
+                    </p>
+                    <div class="bg-circle"></div>
+                  </div>
+                `},{id:3,title:"WILD",overlayImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd2b28546d7fdf960ff15_the-abys.webp",bgImage:"https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd22d5c713e16e54c2c42_the-island-bg.webp",content:`
+                  <style>
+                    .portal-content p {
+                      font-size: 20px;
+                      line-height: 1.5;
+                      color: #fff;
+                      margin-top: 24px;
+                    }
+                    .portal-content {
+                      text-align: left;
+                     position: relative;
+                      left: 5%;
+                      bottom: 10vh;
+                      max-width: 350px;
+                    }
+                    .bg-circle {
+                      filter: blur(40px);
+                      position: absolute;
+                      top: 0%;
+                      left: 0%;
+                      bottom: 0%;
+                      right: 0%;
+                      width: 130%;
+                      height: 130%;
+                      background-color: rgba(0,0,0,0.45);
+                      border-radius: 50%;
+                      z-index: -1;
+                    }
+                  </style>
+                  <div class="portal-content">
+                    <h2 class="h-h2">Reality Check</h2>
+                    <p>
+                        Lie down to sleep and keep your mind calmly focused—watch your thoughts without following them.
+                        As your body relaxes and sleep paralysis sets in, focus on subtle sensations: floating, spinning, sounds.
+                        Resist the urge to move, and let a dream environment naturally form around you.
+                        With patience and softness, you'll find yourself stepping directly into the dream world while fully aware.
+                    </p>
+                    <div class="bg-circle"></div>
+                  </div>
+                `}],a=document.querySelector(".portal-section"),i=document.querySelector(".portal-overlay"),n=document.querySelector(".portal-bg"),s=document.querySelector(".look-button"),l=s?.querySelector(".menu_nav-text"),r=document.querySelector(".portal-section h2"),d=document.querySelector(".paragraph.is-eyebrow.big"),c=document.querySelector(".dream-arrow.l"),p=document.querySelector(".dream-arrow.r"),u=document.querySelector(".prevent-scroll");if(!d&&a){let $=document.createElement("div");$.className="scene-indicator",$.style.position="absolute",$.style.top="30px",$.style.left="50%",$.style.transform="translateX(-50%)",$.style.color="white",$.style.fontSize="18px",$.style.zIndex="10",a.appendChild($),d=document.querySelector(".scene-indicator")}if(!r&&a){let y=document.createElement("h2");y.className="scene-title",y.style.position="absolute",y.style.top="170px",y.style.left="50%",y.style.transform="translateX(-50%)",y.style.color="white",y.style.fontSize="36px",y.style.zIndex="10",y.style.margin="0",a.appendChild(y),r=document.querySelector(".scene-title")}let f=document.querySelector(".portal-section .scene-content");function h(){if(t||!i||!n||!i.classList.contains("revealed"))return;t=!0;let e=i.classList.contains("expand");e?("undefined"!=typeof gsap?(gsap.to(i,{maskSize:"20vw 20vw",duration:1,ease:"power2.inOut"}),gsap.to(n,{maskSize:"25vw 25vw",duration:1.2,ease:"power2.inOut",onComplete(){t=!1,i.classList.remove("expand"),n.classList.remove("expand")}}),f&&gsap.to(f,{opacity:0,duration:.4})):(f&&f.classList.remove("visible"),i.classList.remove("expand"),n.classList.remove("expand"),setTimeout(()=>t=!1,1e3)),u&&(u.style.display="none"),l&&(l.textContent="Check The Method")):("undefined"!=typeof gsap?(gsap.to(i,{maskSize:"90vw 90vw",duration:1.2,ease:"power2.inOut"}),gsap.to(n,{maskSize:"95vw 95vw",duration:1.4,ease:"power2.inOut",onComplete(){t=!1,i.classList.add("expand"),n.classList.add("expand")}}),f&&gsap.to(f,{opacity:1,delay:.5,duration:.8})):(i.classList.add("expand"),n.classList.add("expand"),setTimeout(()=>{f&&f.classList.add("visible"),t=!1},500)),u&&(u.style.display="block"),l&&(l.textContent="Close"))}function m(o){if(t)return;t=!0;let a=i.classList.contains("expand");gsap.to([i,n],{opacity:0,duration:.3,onComplete(){b(e=o),g(),gsap.to([i,n],{opacity:1,duration:.3,onComplete(){t=!1,a&&(gsap.set(i,{maskSize:"70vw 70vw"}),gsap.set(n,{maskSize:"95vw 95vw"}),f&&gsap.to(f,{opacity:1,duration:.4}))}})}})}function b(e){let t=o.find(t=>t.id===e);t&&(i.style.backgroundImage=`url('${t.overlayImage}')`,n.style.backgroundImage=`url('${t.bgImage}')`,r&&(r.textContent=t.title),f&&(f.innerHTML=t.content))}function g(){d&&(d.textContent=`${e}/3`)}function v(e){i.classList.contains("expand")?"undefined"!=typeof gsap?(t=!0,gsap.to(i,{maskSize:"20vw 20vw",duration:1,ease:"power2.inOut"}),gsap.to(n,{maskSize:"25vw 25vw",duration:1.2,ease:"power2.inOut",onComplete(){i.classList.remove("expand"),n.classList.remove("expand"),t=!1,e&&e()}}),f&&gsap.to(f,{opacity:0,duration:.4}),l&&(l.textContent="Check The Method")):(f&&f.classList.remove("visible"),i.classList.remove("expand"),n.classList.remove("expand"),setTimeout(()=>{t=!1,e&&e()},1e3)):e&&e()}!f&&a&&((f=document.createElement("div")).className="scene-content",f.style.position="absolute",f.style.top="50%",f.style.left="50%",f.style.transform="translate(-50%, -50%)",f.style.width="80%",f.style.color="white",f.style.textAlign="center",f.style.opacity="0",f.style.pointerEvents="none",f.style.zIndex="10",a.appendChild(f)),i&&n?(b(e),g()):console.error("Portal elements not found. Check your selectors."),s?s.addEventListener("click",h):console.error("Look button not found. Check your selector."),c&&c.addEventListener("click",function(o){o.preventDefault(),t||v(()=>{e>1?m(e-1):m(3)})}),p&&p.addEventListener("click",function(o){o.preventDefault(),t||v(()=>{e<3?m(e+1):m(1)})}),"undefined"!=typeof ScrollTrigger&&(gsap.registerPlugin(ScrollTrigger),ScrollTrigger.create({trigger:".portal-section",start:"top center",end:"bottom center",onEnter(){requestAnimationFrame(()=>{i.classList.add("revealed"),setTimeout(()=>{n.classList.add("revealed");let e=document.querySelector(".dream_header-wrapper"),t=document.querySelector(".look-button");e&&t&&(gsap.fromTo(e,{opacity:0,y:40,scale:.95},{opacity:1,y:0,scale:1,duration:1.3,ease:"expo.out",delay:1.05}),gsap.fromTo(t,{opacity:0,y:40,scale:.95},{opacity:1,y:0,scale:1,duration:1.3,ease:"expo.out",delay:1.28}))},100)})},onLeaveBack(){i.classList.contains("expand")&&h(),n.classList.remove("revealed"),setTimeout(()=>{i.classList.remove("revealed");let e=document.querySelector(".dream_header-wrapper"),t=document.querySelector(".look-button");e&&t&&gsap.to([e,t],{opacity:0,y:40,scale:.95,duration:.8,ease:"power2.in"})},100)}})),document.addEventListener("DOMContentLoaded",function(){let e=document.querySelector(".dream_header-wrapper"),t=document.querySelector(".look-button");e&&t&&gsap.set([e,t],{opacity:0,y:40,scale:.95})})});
+  </script>
+            </div>
+            <div class="dream_header-wrapper">
+              <p class="paragraph is-eyebrow big">1/3</p>
+              <div class="dream_header-container">
+                <div class="arrow-container">
+                  <a href="#" class="dream-arrow-link w-inline-block"><img src="images/Arrow-dream.svg" loading="lazy" alt="arrow left" class="dream-arrow l"></a>
+                </div>
+                <div class="dream_header-name">
+                  <h2 class="h-h2 uppercase">Reality Testing</h2>
+                </div>
+                <div class="arrow-container">
+                  <a href="#" class="dream-arrow-link w-inline-block"><img src="images/Arrow-dream.svg" loading="lazy" alt="arrow left" class="dream-arrow r"></a>
+                </div>
+              </div>
+            </div>
+            <div data-scroll-lock="true" class="prevent-scroll"></div>
+          </div>
+        </div>
+      </section>
+      <footer class="footer_section">
+        <div class="footer_grid">
+          <div id="w-node-ded6469d-fd52-7113-24f4-50b90002d870-f269275b" class="footer_col">
+            <p data-typing="slow" class="footer_list-heading">About</p>
+            <p data-typing="fast" class="footer-para">Hi there! My name is Dima and I&#x27;m Digital Designer and Creative Developer. What drives me is the ability to turn abstract ideas — brand stories, emotional states, conceptual metaphors — into real-time digital experiences. My background in branding taught me to design with meaning. My shift into code, motion, and 3D made me obsessed with how that meaning is experienced.</p>
+          </div>
+          <div id="w-node-_04ead4a9-e19f-da38-8a37-261e9889fcba-f269275b" class="footer_col"></div>
+          <div class="footer_col">
+            <p data-typing="slow" class="footer_list-heading">Tools Used</p>
+            <div class="footer_list">
+              <p data-typing="slow-delay" class="footer_list-item">Figma</p>
+              <p data-typing="slow-delay" class="footer_list-item">Webflow</p>
+              <p data-typing="slow-delay" class="footer_list-item">After Effects</p>
+              <p data-typing="slow-delay" class="footer_list-item">Spline.Design</p>
+              <p data-typing="slow-delay" class="footer_list-item">Cinema4D</p>
+              <p data-typing="slow-delay" class="footer_list-item">RizomUV</p>
+              <p data-typing="slow-delay" class="footer_list-item">Cursor</p>
+              <p data-typing="slow-delay" class="footer_list-item">Midjourney</p>
+              <p data-typing="slow-delay" class="footer_list-item">Chatgpt</p>
+            </div>
+          </div>
+          <div class="footer_col">
+            <p data-typing="slow" class="footer_list-heading">Setup</p>
+            <div class="footer_list">
+              <p data-typing="slow-delay" class="footer_list-item">Html</p>
+              <p data-typing="slow-delay" class="footer_list-item">Css</p>
+              <p data-typing="slow-delay" class="footer_list-item">JS</p>
+              <p data-typing="slow-delay" class="footer_list-item">GSAP</p>
+              <p data-typing="slow-delay" class="footer_list-item">Three.js</p>
+              <p data-typing="slow-delay" class="footer_list-item">WebGL</p>
+              <p data-typing="slow-delay" class="footer_list-item">IX2</p>
+            </div>
+          </div>
+          <div id="w-node-_5d89e287-fbe0-e1bb-ec64-4489cceca9f9-f269275b" class="footer_col">
+            <a href="#" class="w-inline-block">
+              <p data-typing="slow" class="footer_list-heading">Get in touch</p>
+            </a>
+            <div class="footer_list">
+              <a href="mailto:dgolub2020@gmail.com?subject=Hello%20from%20Somnia!" class="footer-link w-inline-block">
+                <p data-typing="slow-delay" class="footer_list-item">dgolub2020@gmail.com →</p>
+                <div class="link-line"></div>
+              </a>
+              <a href="https://wa.me/+79139184087" target="_blank" class="footer-link w-inline-block">
+                <p data-typing="slow-delay" class="footer_list-item">Whatsapp →</p>
+                <div class="link-line"></div>
+              </a>
+              <a href="https://t.me/Dmitrii_Golub" target="_blank" class="footer-link w-inline-block">
+                <p data-typing="slow-delay" class="footer_list-item">Telegram →</p>
+                <div class="link-line"></div>
+              </a>
+              <a href="http://www.linkedin.com/in/dmitry-golub-design" target="_blank" class="footer-link w-inline-block">
+                <p data-typing="slow-delay" class="footer_list-item">Linkedin →</p>
+                <div class="link-line"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-logo_container"><img src="images/The-Somnia_1.svg" loading="lazy" alt="&quot;The Somnia&quot; logo" class="footer-logo"></div>
+        <div class="footer_grid is-bottom">
+          <div class="footer_col is-hor">
+            <p data-typing="slow" class="is-footer-btm">awwwards masterclass by</p>
+            <a href="https://www.awwwards.com/niccolo.miranda/" target="_blank" class="footer-link w-inline-block">
+              <p data-typing="slow-delay" class="footer_list-item is-white">Niccolo Miranda</p>
+              <div class="link-line"></div>
+            </a>
+          </div>
+          <div class="footer_col is-hor">
+            <p data-typing="slow" class="is-footer-btm">Design and Dev</p>
+            <a href="https://www.behance.net/dmitrii_g" target="_blank" class="footer-link w-inline-block">
+              <p data-typing="slow-delay" class="footer_list-item is-white">Dmitrii Golub</p>
+              <div class="link-line"></div>
+            </a>
+          </div>
+          <div class="footer_col-center">
+            <p data-typing="slow-delay" class="paragraph is-transparency is-right">// 2025</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+  <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67d67edc3ed28aa00cd5d1c0" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="js/webflow.js" type="text/javascript"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/gsap.min.js" type="text/javascript"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/ScrollTrigger.min.js" type="text/javascript"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/SplitText.min.js" type="text/javascript"></script>
+  <script src="https://cdn.prod.website-files.com/gsap/3.13.0/InertiaPlugin.min.js" type="text/javascript"></script>
+  <script type="text/javascript">gsap.registerPlugin(ScrollTrigger,SplitText,InertiaPlugin);</script><!--  Lenis библиотека  -->
+  <script src="https://assets-global.website-files.com/6330c0ebacf06abbc83b6eb3/64103732523ba652052e0223_lenis-bundled.txt"></script>
+  <script>
+class Scroll extends Lenis{constructor(){super({duration:1.1,easing:e=>1===e?1:1-Math.pow(2,-13*e),direction:"vertical",smooth:!0,smoothTouch:!1,touchMultiplier:1.5}),this.time=0,this.isActive=!0,this.init()}init(){this.render()}render(){this.raf(this.time+=10),requestAnimationFrame(this.render.bind(this))}}window.SmoothScroll=new Scroll;const lenis=window.SmoothScroll;let scrollLocked=!1;function lockPageScroll(){scrollLocked||(scrollLocked=!0,lenis.stop(),document.documentElement.style.overflow="hidden")}function unlockPageScroll(){scrollLocked&&(scrollLocked=!1,lenis.start(),document.documentElement.style.overflow="")}let sectionLocked=!1;function checkLockTargets(){let e=document.querySelectorAll("[data-scroll-lock]"),o=.5*window.innerHeight,t=[...e].some(e=>{let t=e.getBoundingClientRect();return t.top<o&&t.bottom>o});t&&!sectionLocked?(lenis.stop(),document.documentElement.style.overflow="hidden",sectionLocked=!0):!t&&sectionLocked&&(lenis.start(),document.documentElement.style.overflow="",sectionLocked=!1),requestAnimationFrame(checkLockTargets)}requestAnimationFrame(checkLockTargets);
+</script>
+  <style>
+  .cursor-wrapper, 
+  .cursor,
+  .cursor-mask,
+  .cursor-text {
+    pointer-events: none;
+  }
+  /* Стили для WebGL canvas */
+  .portal-section .transition-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1.5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      /* Добавляем маску */
+      mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.1) 65%, rgba(0, 0, 0, 0) 85%);
+      -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.1) 65%, rgba(0, 0, 0, 0) 85%);
+      mask-size: 20vw 20vw;
+      -webkit-mask-size: 20vw 20vw;
+      mask-position: center;
+      -webkit-mask-position: center;
+      mask-repeat: no-repeat;
+      -webkit-mask-repeat: no-repeat;
+      transition: mask-size 1s cubic-bezier(0.77, 0, 0.175, 1), -webkit-mask-size 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+      pointer-events: none;
+  }
+  .portal-section .transition-canvas.active {
+      opacity: 1;
+      pointer-events: none;
+  }
+  .portal-section .transition-canvas.expand {
+      mask-size: 70vw 70vw;
+      -webkit-mask-size: 70vw 70vw;
+      pointer-events: none;
+  }
+  canvas {
+        pointer-events: none;
+  }
+</style>
+  <script src="https://cdn.jsdelivr.net/gh/chipas111/the-somnia@1a2147b/portal-effect.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded",async function(){let e=document.createElement("canvas");e.classList.add("transition-canvas"),document.querySelector(".portal-section").appendChild(e),window.portalEffect=new PortalEffect(e);let t=document.querySelector(".dream-arrow.l"),a=document.querySelector(".dream-arrow.r"),c=document.querySelector(".look-button"),r=document.querySelector(".portal-overlay");document.querySelector(".portal-bg");let n=["https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67d6b2313ed28aa00cf64ab0_e712bc7ccf26dffa4f073752859f69ae_Red%20River.webp","https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd22d8546d7fdf9609282_9910c098afd117adae1627a9995e0dee_the-island-overlay.webp","https://cdn.prod.website-files.com/67d67edc3ed28aa00cd5d1c0/67fdd2b28546d7fdf960ff15_the-abys.webp"],s=!1;async function l(t,a){if(s)return;s=!0,e.classList.add("active"),await window.portalEffect.setTextures(n[t],n[a]);let c=performance.now();!function t(){let a=performance.now(),r=Math.min((a-c)/1e3,1);window.portalEffect.setProgress(r),r<1?requestAnimationFrame(t):(e.classList.remove("active"),s=!1)}()}async function i(t){if(s)return;s=!0;let a=parseInt(document.querySelector(".paragraph.is-eyebrow.big")?.textContent?.split("/")[0]||"1")-1;if(e.classList.add("active"),t)await window.portalEffect.setTextures(n[a],n[a]);else{let c=(a+1)%n.length;await window.portalEffect.setTextures(n[a],n[c])}t?e.classList.add("expand"):e.classList.remove("expand");let r=t?1400:1200,l=performance.now();!function a(){let c=performance.now(),n=Math.min((c-l)/r,1);t?window.portalEffect.setProgress(1-n):window.portalEffect.setProgress(n),n<1?requestAnimationFrame(a):(t||e.classList.remove("active"),s=!1)}()}if(c){let o=c.onclick;c.onclick=null,c.addEventListener("click",async function(e){if(s){e.preventDefault();return}let t=!r.classList.contains("expand");i(t),o&&o.call(this,e)})}if(t){let d=t.onclick;t.onclick=null,t.addEventListener("click",async function(e){if(s){e.preventDefault();return}let t=parseInt(document.querySelector(".paragraph.is-eyebrow.big")?.textContent?.split("/")[0]||"1");l(t-1,t>1?t-2:2),d&&d.call(this,e)})}if(a){let f=a.onclick;a.onclick=null,a.addEventListener("click",async function(e){if(s){e.preventDefault();return}let t=parseInt(document.querySelector(".paragraph.is-eyebrow.big")?.textContent?.split("/")[0]||"1");l(t-1,t<3?t:0),f&&f.call(this,e)})}"undefined"!=typeof ScrollTrigger&&(gsap.registerPlugin(ScrollTrigger),ScrollTrigger.create({trigger:".portal-section",start:"top center",end:"bottom center",onEnter(){e.classList.add("active"),window.portalEffect.setProgress(0)},onLeaveBack(){e.classList.remove("active")}}))});
+</script>
+  <script>
+gsap.registerPlugin(ScrollTrigger),document.querySelectorAll(".content_wrap").forEach(e=>{let t=+e.dataset.title,r=(t-1)*100/6,o=100*t/6,a=gsap.timeline({scrollTrigger:{trigger:".content-section",start:`${r}% center`,end:`${o}% center`,scrub:.8}});a.fromTo(e,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.8,ease:"power2.out"}).to({},{duration:.8}).to(e,{opacity:0,duration:1,ease:"power2.in"}).to(e,{scale:.5,duration:.8,ease:"power2.in"})});
+</script>
+  <script>
+gsap.registerPlugin(ScrollTrigger,SplitText),document.addEventListener("DOMContentLoaded",()=>{let e=[];document.querySelectorAll("[data-typing]").forEach(t=>{let a=t.dataset.typing,o=.04,r=.05,l=0;"slow"===a?(o=.07,r=.03):"fast"===a?(o=.01,r=.01):"slow-delay"===a&&(o=.09,r=.03,l=.3);let s=new SplitText(t,{type:"words,chars"});gsap.set(s.chars,{opacity:0,display:"inline",whiteSpace:"normal"});let n=gsap.to(s.chars,{opacity:1,duration:r,stagger:o,delay:l,ease:"power1.out",paused:!0});ScrollTrigger.create({trigger:t,start:"top 55%",onEnter:()=>n.play()}),e.push(n)});let t=document.querySelector(".footer_section");if(t){let a=new IntersectionObserver((t,a)=>{t.forEach(t=>{t.isIntersecting&&(e.forEach(e=>e.play()),a.disconnect())})},{root:null,threshold:.5});a.observe(t)}});
+</script>
+</body>
+</html>
