@@ -748,7 +748,7 @@ a {
 
 .look-button {
   z-index: 9999;
-  opacity: 1;
+  opacity: 0;
   color: #fff;
   text-align: center;
   cursor: pointer;
@@ -801,7 +801,7 @@ a {
 
 .dream_header-wrapper {
   z-index: auto;
-  opacity: 1;
+  opacity: 0;
   text-align: center;
   position: relative;
   top: 16vh;
