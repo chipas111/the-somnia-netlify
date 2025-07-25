@@ -251,7 +251,7 @@ a {
 }
 
 .button_preloader {
-  pointer-events: none;
+  /* pointer-events: none; */
   cursor: pointer;
   background-color: #313130;
   border: .0625rem solid #ffffff80;
